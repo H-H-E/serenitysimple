@@ -19,11 +19,13 @@ parts.push(L(k.planOutline(k.insetPlan(base,4),0,P),'lo'));
 parts.push(dot(k.corners(base,8),0));
 for(const y of [-38,30]) { parts.push(S({x:-102,y,w:204,d:7,r:1},0,4)); for(const x of [-90,-12,70]) parts.push(S({x,y:y-2,w:10,d:11,r:1},4,3,'lo')); }
 // Three housings and their machined tops. Ordered back to front in projection.
-for(const [x,w] of [[-96,47],[-35,72],[52,45]]) {
+for(const [x,w,name] of [[-96,47,'gas'],[-35,72,'conversion'],[52,45,'output']]) {
+ parts.push(`<g class="anatomy-stage stage-${name}">`);
  parts.push(S({x,y:-27,w,d:52,r:2},4,22,'hi',.8));
  parts.push(S({x:x+2,y:-25,w:w-4,d:48,r:1},26,3,'mid'));
  parts.push(L(k.planOutline({x:x+5,y:-22,w:w-10,d:42,r:1},29,P),'lo'));
  parts.push(dot([[x+5,-22],[x+w-5,-22],[x+5,20],[x+w-5,20]],29));
+ parts.push('</g>');
 }
 // The centre stack sits on its plate, held down by crossbars and end blocks.
 for(let i=0;i<8;i++) parts.push(S({x:-28+i*8,y:-20,w:3,d:38,r:0},29,4,'mid',.2));

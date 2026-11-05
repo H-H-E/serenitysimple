@@ -18,6 +18,12 @@ parts.push(S(base,-7,7));
 parts.push(L(k.planOutline(k.insetPlan(base,4),0,P),'lo'));
 parts.push(dot(k.corners(base,8),0));
 for(const y of [-38,30]) { parts.push(S({x:-102,y,w:204,d:7,r:1},0,4)); for(const x of [-90,-12,70]) parts.push(S({x,y:y-2,w:10,d:11,r:1},4,3,'lo')); }
+// Conceptual inter-stage connections sit at the mounting plane, below the
+// housings and connector blocks. Both ends meet a housing's lower side edge.
+for(const [x0,x1,name] of [[-49,-35,'gas'],[37,52,'power']]) {
+ const ends=[x0,x1].map(x=>k.iso([x,0,4],P).map(n=>Math.round(n*10)/10));
+ parts.push(`<g class="stage-link stage-link-${name}"><path d="M${ends[0].join(' ')}L${ends[1].join(' ')}"/>${k.dotsSvg(ends,{size:1,tone:'hi'})}</g>`);
+}
 // Three housings and their machined tops. Ordered back to front in projection.
 for(const [x,w,name] of [[-96,47,'gas'],[-35,72,'conversion'],[52,45,'output']]) {
  parts.push(`<g class="anatomy-stage stage-${name}">`);
@@ -28,18 +34,23 @@ for(const [x,w,name] of [[-96,47,'gas'],[-35,72,'conversion'],[52,45,'output']])
  parts.push('</g>');
 }
 // The centre stack sits on its plate, held down by crossbars and end blocks.
+parts.push('<g class="anatomy-stage stage-conversion">');
 for(let i=0;i<8;i++) parts.push(S({x:-28+i*8,y:-20,w:3,d:38,r:0},29,4,'mid',.2));
 for(const y of [-23,20]) parts.push(S({x:-31,y,w:64,d:3,r:0},33,3,'hi',.2));
 for(const x of [-31,28]) for(const y of [-24,19]) parts.push(S({x,y,w:5,d:5,r:0},36,3,'mid',.2));
+parts.push('</g>');
 // Mounted connection blocks and terminal markings: abstract, no operating claims.
-for(const x of [-101,-48,40,97]) parts.push(S({x,y:-9,w:6,d:18,r:1},8,8,'mid'));
+for(const [x,name] of [[-101,'gas'],[-48,'gas'],[40,'conversion'],[97,'output']]) parts.push(`<g class="anatomy-stage stage-${name}">${S({x,y:-9,w:6,d:18,r:1},8,8,'mid')}</g>`);
+parts.push('<g class="anatomy-stage stage-gas">');
 for(const x of [-92,-84,-76,-68]) parts.push(S({x,y:-20,w:4,d:24,r:0},29,1,'lo',.1));
+parts.push('</g><g class="anatomy-stage stage-output">');
 for(const x of [57,65,73,81]) parts.push(S({x,y:-20,w:4,d:24,r:0},29,1,'lo',.1));
+parts.push('</g>');
 parts.push(S({x:-43,y:44,w:86,d:7,r:1},0,1,'lo',.2));
 parts.push(dot([[-38,47],[38,47]],1));
 // An illustrative cover lifts clear, revealing the kit-built demonstrator.
 const cover=S({x:-107,y:-42,w:214,d:84,r:3},39,12,'hi',1)+L(k.planOutline({x:-102,y:-37,w:204,d:74,r:2},51,P),'lo')+dot([[-98,-33],[98,-33],[-98,33],[98,33]],51);
-const svg=k.figureSvg({width:600,height:390,label:'Conceptual bench-mounted fuel-cell system study. Opening the cover reveals illustrative gas handling, conversion and electrical output stages.',body:[...parts,`<g class="anatomy-cover">${cover}</g>`]});
+const svg=k.figureSvg({width:600,height:390,label:'Conceptual bench-mounted fuel-cell system study. Opening the cover reveals illustrative gas handling, conversion and electrical output stages.',body:[...parts,`<g class="anatomy-cover">${cover}</g>`]}).replace('viewBox="0 0 600 390"','viewBox="100 0 400 360"').replace('height="390"','height="540"');
 const htmlPath=new URL('../../index.html',import.meta.url);let html=readFileSync(htmlPath,'utf8');
 const start='<!-- ANATOMY FIGURE START -->',end='<!-- ANATOMY FIGURE END -->';
 if(!html.includes(start)||!html.includes(end)) throw Error('Figure markers missing');

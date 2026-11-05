@@ -6,6 +6,7 @@
 // three connector blocks, a cover, two cover catches and a legend plate.
 import { readFileSync, writeFileSync } from 'node:fs';
 import * as k from './iso-kit.mjs';
+import {compactPaths} from './compact.mjs';
 const P=k.fitProjection([...k.boxCorners({x:-125,y:-65,w:250,d:130,r:4},-12,0),[-125,-65,105],[125,65,105]],600,390,{pad:32,azimuth:42});
 const S=(plan,z,h,tone='mid',bevel=.5)=>k.solidSvg(k.slabOf(plan,z,h,P,1,0),{tone,crease:'faint'});
 const L=(d,tone='lo')=>k.lineSvg(d,{tone});
@@ -54,6 +55,6 @@ const svg=k.figureSvg({width:600,height:390,label:'Conceptual bench-mounted fuel
 const htmlPath=new URL('../../index.html',import.meta.url);let html=readFileSync(htmlPath,'utf8');
 const start='<!-- ANATOMY FIGURE START -->',end='<!-- ANATOMY FIGURE END -->';
 if(!html.includes(start)||!html.includes(end)) throw Error('Figure markers missing');
-html=html.slice(0,html.indexOf(start)+start.length)+'\n'+svg+'\n'+html.slice(html.indexOf(end));
+html=html.slice(0,html.indexOf(start)+start.length)+'\n'+compactPaths(svg)+'\n'+html.slice(html.indexOf(end));
 writeFileSync(htmlPath,html);
 console.log(`Rendered ${parts.length} kit-generated groups and cover into index.html`);

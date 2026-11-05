@@ -55,6 +55,6 @@ const svg=k.figureSvg({width:600,height:390,label:'Conceptual bench-mounted fuel
 const htmlPath=new URL('../../index.html',import.meta.url);let html=readFileSync(htmlPath,'utf8');
 const start='<!-- ANATOMY FIGURE START -->',end='<!-- ANATOMY FIGURE END -->';
 if(!html.includes(start)||!html.includes(end)) throw Error('Figure markers missing');
-html=html.slice(0,html.indexOf(start)+start.length)+'\n'+compactPaths(svg)+'\n'+html.slice(html.indexOf(end));
+html=html.slice(0,html.indexOf(start)+start.length)+'\n'+compactPaths(svg).replaceAll('iso-shade','s-sh').replaceAll('iso-fill','s-fi').replaceAll('iso-top','s-t').replaceAll('iso-line','s-li').replaceAll('iso-edge','s-e').replaceAll('iso-crease','s-cr').replaceAll('iso-solid','s-s').replaceAll('iso-dots','s-d').replaceAll('data-shade','data-s').replaceAll('data-tone','data-t')+'\n'+html.slice(html.indexOf(end));
 writeFileSync(htmlPath,html);
 console.log(`Rendered ${parts.length} kit-generated groups and cover into index.html`);

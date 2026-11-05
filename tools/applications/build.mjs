@@ -12,14 +12,14 @@ const scenes=[
  ['Field monitoring',`${ground}<use href="#app-generator" x="12" y="8"/>${wire('M116 112 162 135 226 103 246 113')}${sensor}`],
  ['Utilities and microgrids',`${ground}<use href="#app-generator" x="12" y="8"/>${wire('M116 112 156 132 202 109M156 132 199 153 255 125')}${home(195,67)}${home(250,100)}${home(197,126)}`],
  ['Data centres',`${ground}<use href="#app-generator" x="12" y="8"/>${wire('M116 112 164 136 210 113 269 143')}${rack(261,77)}${rack(234,91)}${rack(207,105)}`],
- ['Mining and industry',`${ground}<use href="#app-generator" x="12" y="8"/>${wire('M116 112 163 136 242 96')}<g class="app-seam"><path d="m214 129 24-98 25 12 25 93m-74-7 25 12 49-5M238 31l25 12-24 98m-16-50 49 24m-42-51 35 16M238 31l50 105"/><circle cx="251" cy="43" r="7"/><path d="M251 50v28"/></g><g class="app-lift app-solid"><path d="m241 78 19 9v22l-19-9Z"/><path d="m244 84 12 6v13l-12-6Z" class="app-receive"/></g>`],
+ ['Mining and industry',`${ground}<use href="#app-generator" x="12" y="8"/>${wire('M116 112 163 136 242 96')}<g class="app-seam"><path d="m214 129 24-98 25 12 25 93m-74-7 25 12 49-5M238 31l25 12-24 98m-16-50 49 24m-42-51 35 16M238 31l50 105"/><circle cx="251" cy="43" r="7"/><path d="M251 50v28" class="app-cable"/></g><g class="app-lift app-solid"><path d="m241 78 19 9v22l-19-9Z"/><path d="m244 84 12 6v13l-12-6Z" class="app-receive"/></g>`],
  ['Rental power',`${ground}<path d="m24 113 44-22 56 28-44 22Z" class="app-top app-solid"/><use href="#app-generator" x="12" y="13"/><g class="app-seam"><circle cx="40" cy="130" r="9"/><circle cx="108" cy="132" r="9"/><path d="m124 119 30 15 14-7M254 154v-58m-18 67 18-9 18 9"/></g>${wire('M115 120 165 145 210 123 254 145')}<g class="app-solid"><path d="m239 77 17-8 19 10v19l-17 8-19-10Z"/><path d="m243 82 12 6v12l-12-6Z" class="app-receive"/></g>`]
 ];
 let html=readFileSync(new URL('../../index.html',import.meta.url),'utf8');
 // Insert symbols once; each scene is otherwise independent of the hero artwork.
-const defsStart='<!-- APPLICATION PARTS START -->',defsEnd='<!-- APPLICATION PARTS END -->';
+const defsStart='<!-- APPS -->',defsEnd='<!-- APPS-END -->';
 const defs=defsStart+`<svg width="0" height="0" aria-hidden="true" style="position:absolute">${symbols}</svg>`+defsEnd;
 if(html.includes(defsStart))html=html.slice(0,html.indexOf(defsStart))+defs+html.slice(html.indexOf(defsEnd)+defsEnd.length);else html=html.replace('<div class="market-list">',defs+'\n <div class="market-list">');
-let n=0;html=html.replace(/(<div class="market-body">)(?:<!-- APPLICATION SCENE START -->[\s\S]*?<!-- APPLICATION SCENE END -->)?/g,(_,start)=>{const [name,body]=scenes[n++];return start+`<!-- APPLICATION SCENE START --><figure class="market-motion"><svg viewBox="0 0 340 225" role="img" aria-label="Illustrative ${name.toLowerCase()} connection">${body}</svg><figcaption>Illustrative application concept</figcaption></figure><!-- APPLICATION SCENE END -->`});
+let n=0;html=html.replace(/(<div class="market-body">)(?:<!-- APP -->[\s\S]*?<!-- APP-END -->)?/g,(_,start)=>{const [name,body]=scenes[n++];return start+`<!-- APP --><figure class="market-motion"><svg viewBox="0 0 340 225" role="img" aria-label="Illustrative ${name.toLowerCase()} connection">${body}</svg><figcaption>Illustrative application concept</figcaption></figure><!-- APP-END -->`});
 if(n!==5)throw Error(`Expected five applications, found ${n}`);
 writeFileSync(new URL('../../index.html',import.meta.url),html);console.log('Built five lightweight application scenes');
